@@ -1,0 +1,88 @@
+﻿@model OptiShop.Business.DTOs.DashboardDto
+@{ ViewData["Title"] = "Dashboard"; }
+
+<!-- Stat Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card stat-card-blue">
+            <div class="stat-card-label">Tổng doanh thu</div>
+            <div class="stat-card-value">@Model.TotalRevenue.ToString("N0") <small style="font-size:0.5em; font-weight:500;">VNĐ</small></div>
+            <i class="bi bi-wallet2 stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card stat-card-green">
+            <div class="stat-card-label">Đơn hàng</div>
+            <div class="stat-card-value">@Model.TotalOrders</div>
+            <i class="bi bi-receipt stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card stat-card-amber">
+            <div class="stat-card-label">Sản phẩm</div>
+            <div class="stat-card-value">@Model.TotalProducts</div>
+            <i class="bi bi-box-seam stat-card-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card stat-card-purple">
+            <div class="stat-card-label">Khách hàng</div>
+            <div class="stat-card-value">@Model.TotalCustomers</div>
+            <i class="bi bi-people stat-card-icon"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Access & Info -->
+<div class="row g-4">
+    <div class="col-md-7">
+        <div class="card-panel">
+            <div class="card-panel-header">
+                <h5><i class="bi bi-lightning-fill"></i> Truy cập nhanh</h5>
+            </div>
+            <div class="card-panel-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a href="/Order/Create" class="quick-link">
+                            <div class="quick-link-icon ql-blue"><i class="bi bi-plus-circle"></i></div>
+                            Tạo đơn hàng mới
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/Product/Create" class="quick-link">
+                            <div class="quick-link-icon ql-green"><i class="bi bi-plus-circle"></i></div>
+                            Thêm sản phẩm
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/Warehouse/Create" class="quick-link">
+                            <div class="quick-link-icon ql-amber"><i class="bi bi-plus-circle"></i></div>
+                            Nhập kho hàng
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/Customer/Create" class="quick-link">
+                            <div class="quick-link-icon ql-purple"><i class="bi bi-plus-circle"></i></div>
+                            Thêm khách hàng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card-panel">
+            <div class="card-panel-header">
+                <h5><i class="bi bi-info-circle"></i> Thông tin hệ thống</h5>
+            </div>
+            <div class="card-panel-body">
+                <table class="table table-borderless info-table mb-0">
+                    <tr><td>Phiên bản</td><td>OptiShop v1.0</td></tr>
+                    <tr><td>Framework</td><td>ASP.NET Core 8</td></tr>
+                    <tr><td>Database</td><td>SQL Server</td></tr>
+                    <tr><td>Ngày giờ</td><td>@DateTime.Now.ToString("dd/MM/yyyy HH:mm")</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+@model IEnumerable<OptiShop.Models.Product>
+@{ ViewData["Title"] = "Quản lý sản phẩm"; }
+
+<div class="card-panel">
+    <div class="card-panel-header">
+        <div class="d-flex align-items-center gap-3">
+            <form class="d-flex gap-2" method="get">
+                <input type="text" name="keyword" class="form-control" placeholder="Tìm sản phẩm..." value="@ViewBag.Keyword" style="width:220px;" />
+                <select name="categoryId" class="form-select" style="width:160px;">
+                    <option value="">Tất cả danh mục</option>
+                    @foreach (var item in (SelectList)ViewBag.Categories) { <option value="@item.Value">@item.Text</option> }
+                </select>
+                <select name="brandId" class="form-select" style="width:160px;">
+                    <option value="">Tất cả thương hiệu</option>
+                    @foreach (var item in (SelectList)ViewBag.Brands) { <option value="@item.Value">@item.Text</option> }
+                </select>
+                <button class="btn btn-ghost"><i class="bi bi-search"></i> Tìm</button>
+            </form>
+        </div>
+        <a href="/Product/Create" class="btn btn-primary"><i class="bi bi-plus"></i> Thêm sản phẩm</a>
+    </div>
+    <div class="card-panel-body compact" style="padding:0;">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th style="width:60px;"></th>
+                    <th>Tên sản phẩm</th>
+                    <th>Danh mục</th>
+                    <th>Thương hiệu</th>
+                    <th class="text-end">Giá bán</th>
+                    <th class="text-center">Tồn kho</th>
+                    <th class="text-center" style="width:100px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td><img src="@(p.ImageUrl ?? "/images/no-image.png")" alt="" class="product-thumb" /></td>
+                    <td><span class="fw-semibold" style="color:var(--gray-900);">@p.ProductName</span></td>
+                    <td>@p.Category?.CategoryName</td>
+                    <td>@p.Brand?.BrandName</td>
+                    <td class="text-end price">@p.Price.ToString("N0") đ</td>
+                    <td class="text-center">
+                        @{
+                            var stockClass = p.Stock > 10 ? "badge-stock-ok" : p.Stock > 0 ? "badge-stock-low" : "badge-stock-out";
+                        }
+                        <span class="badge @stockClass">@p.Stock</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a href="/Product/Edit/@p.ProductId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                            <form method="post" action="/Product/Delete/@p.ProductId" class="d-inline" onsubmit="return confirm('Xóa sản phẩm này?')">
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-box-seam"></i>
+                <p>Chưa có sản phẩm nào</p>
+            </div>
+        }
+    </div>
+</div>

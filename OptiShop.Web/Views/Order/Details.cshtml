@@ -1,0 +1,66 @@
+@model OptiShop.Models.Order
+@{ ViewData["Title"] = "Đơn hàng #" + Model.OrderId; }
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card-panel">
+            <div class="card-panel-header"><h5><i class="bi bi-receipt"></i> Thông tin đơn hàng</h5></div>
+            <div class="card-panel-body">
+                @{
+                    var badgeClass = Model.Status switch { "ChoXacNhan" => "badge-pending", "DangXuLy" => "badge-pending", "DaXacNhan" => "badge-confirmed", "DangGiao" => "badge-shipping", "HoanThanh" => "badge-completed", "DaHuy" => "badge-cancelled", _ => "bg-secondary" };
+                    var statusText = Model.Status switch { "ChoXacNhan" => "Chờ xác nhận", "DangXuLy" => "Đang xử lý", "DaXacNhan" => "Đã xác nhận", "DangGiao" => "Đang giao", "HoanThanh" => "Hoàn thành", "DaHuy" => "Đã hủy", _ => Model.Status };
+                }
+                <table class="table table-borderless info-table mb-3">
+                    <tr><td>Mã đơn</td><td class="fw-bold" style="color:var(--gray-900);">#@Model.OrderId</td></tr>
+                    <tr><td>Khách hàng</td><td class="fw-semibold">@Model.Customer?.FullName</td></tr>
+                    <tr><td>Ngày đặt</td><td>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</td></tr>
+                    <tr><td>Loại đơn</td><td><span class="badge bg-secondary">@Model.OrderType</span></td></tr>
+                    <tr><td>Trạng thái</td><td><span class="badge badge-status @badgeClass">@statusText</span></td></tr>
+                    @if (!string.IsNullOrEmpty(Model.ShippingAddress)) { <tr><td>Địa chỉ giao</td><td>@Model.ShippingAddress</td></tr> }
+                    @if (!string.IsNullOrEmpty(Model.Note)) { <tr><td>Ghi chú</td><td>@Model.Note</td></tr> }
+                    <tr><td>Tổng tiền</td><td class="price-lg">@Model.TotalAmount.ToString("N0") đ</td></tr>
+                </table>
+
+                @if (Model.Status != "HoanThanh" && Model.Status != "DaHuy")
+                {
+                    <div style="border-top:1px solid var(--gray-100); padding-top:16px;">
+                        <div class="form-label" style="margin-bottom:10px;">Cập nhật trạng thái</div>
+                        <div class="d-flex gap-2 flex-wrap">
+                            @if (Model.Status == "ChoXacNhan" || Model.Status == "DangXuLy") { <form method="post" asp-action="UpdateStatus"><input type="hidden" name="id" value="@Model.OrderId" /><input type="hidden" name="status" value="DaXacNhan" /><button class="btn btn-sm btn-info"><i class="bi bi-check"></i> Xác nhận</button></form> }
+                            @if (Model.Status == "DaXacNhan") { <form method="post" asp-action="UpdateStatus"><input type="hidden" name="id" value="@Model.OrderId" /><input type="hidden" name="status" value="DangGiao" /><button class="btn btn-sm btn-primary"><i class="bi bi-truck"></i> Giao hàng</button></form> }
+                            @if (Model.Status == "DangGiao") { <form method="post" asp-action="UpdateStatus"><input type="hidden" name="id" value="@Model.OrderId" /><input type="hidden" name="status" value="HoanThanh" /><button class="btn btn-sm btn-success"><i class="bi bi-check-circle"></i> Hoàn thành</button></form> }
+                            <form method="post" asp-action="Cancel"><input type="hidden" name="id" value="@Model.OrderId" /><button class="btn btn-sm btn-outline-danger" onclick="return confirm('Hủy đơn hàng này?')"><i class="bi bi-x-circle"></i> Hủy đơn</button></form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card-panel">
+            <div class="card-panel-header"><h5><i class="bi bi-list-check"></i> Chi tiết sản phẩm</h5></div>
+            <div class="card-panel-body compact" style="padding:0;">
+                <table class="table">
+                    <thead><tr><th>Sản phẩm</th><th class="text-center">Số lượng</th><th class="text-end">Đơn giá</th><th class="text-end">Thành tiền</th></tr></thead>
+                    <tbody>
+                    @foreach (var d in Model.OrderDetails)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="@(d.Product?.ImageUrl ?? "/images/no-image.png")" class="product-thumb" />
+                                    <span class="fw-semibold" style="color:var(--gray-900);">@d.Product?.ProductName</span>
+                                </div>
+                            </td>
+                            <td class="text-center">@d.Quantity</td>
+                            <td class="text-end">@d.UnitPrice.ToString("N0") đ</td>
+                            <td class="text-end price">@((d.UnitPrice * d.Quantity).ToString("N0")) đ</td>
+                        </tr>
+                    }
+                    </tbody>
+                    <tfoot><tr><td colspan="3" class="text-end fw-bold">Tổng cộng</td><td class="text-end price-lg">@Model.TotalAmount.ToString("N0") đ</td></tr></tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

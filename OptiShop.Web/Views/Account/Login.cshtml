@@ -1,0 +1,41 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đăng nhập";
+}
+<div class="login-page">
+    <div class="login-card">
+        <div class="text-center">
+            <div class="login-logo"><i class="bi bi-eyeglasses"></i></div>
+            <h2 class="login-title">OptiShop</h2>
+            <p class="login-subtitle">Quản lý cửa hàng kính mắt</p>
+        </div>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mb-4" style="font-size:13px;">
+                <i class="bi bi-exclamation-circle-fill"></i> @ViewBag.Error
+            </div>
+        }
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Tên đăng nhập</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" name="username" class="form-control" placeholder="Nhập tên đăng nhập" required autofocus />
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">Mật khẩu</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2" style="font-size:14px; font-weight:600;">
+                Đăng nhập <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+        </form>
+        <p class="text-center mt-4 mb-0" style="font-size:12px; color:var(--gray-400);">
+            Tài khoản mặc định: <code style="background:var(--gray-100); padding:2px 6px; border-radius:4px; font-size:12px; color:var(--gray-600);">admin / admin123</code>
+        </p>
+    </div>
+</div>

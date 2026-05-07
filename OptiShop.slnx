@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="OptiShop.Business/OptiShop.Business.csproj" />
+  <Project Path="OptiShop.DataAccess/OptiShop.DataAccess.csproj" />
+  <Project Path="OptiShop.Models/OptiShop.Models.csproj" />
+  <Project Path="OptiShop.Web/OptiShop.Web.csproj" />
+</Solution>

@@ -1,0 +1,18 @@
+@model OptiShop.Models.Customer
+@{ ViewData["Title"] = Model.CustomerId == 0 ? "Thêm khách hàng" : "Sửa khách hàng"; }
+<div class="card-panel" style="max-width:580px;">
+    <div class="card-panel-header"><h5><i class="bi bi-person-plus-fill"></i> @ViewData["Title"]</h5></div>
+    <div class="card-panel-body">
+        <form method="post">
+            <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
+            <div class="mb-3"><label class="form-label">Họ tên <span class="text-danger">*</span></label><input type="text" name="FullName" class="form-control" value="@Model.FullName" required /></div>
+            <div class="mb-3"><label class="form-label">Số điện thoại <span class="text-danger">*</span></label><input type="text" name="Phone" class="form-control" value="@Model.Phone" required /></div>
+            <div class="mb-3"><label class="form-label">Email</label><input type="email" name="Email" class="form-control" value="@Model.Email" /></div>
+            <div class="mb-4"><label class="form-label">Địa chỉ</label><input type="text" name="Address" class="form-control" value="@Model.Address" /></div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Lưu</button>
+                <a href="/Customer" class="btn btn-ghost">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>

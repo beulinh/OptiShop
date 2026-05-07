@@ -1,0 +1,32 @@
+@model IEnumerable<OptiShop.Models.Supplier>
+@{ ViewData["Title"] = "Quản lý nhà cung cấp"; }
+<div class="card-panel">
+    <div class="card-panel-header">
+        <h5><i class="bi bi-truck"></i> Nhà cung cấp</h5>
+        <a href="/Supplier/Create" class="btn btn-primary"><i class="bi bi-plus"></i> Thêm NCC</a>
+    </div>
+    <div class="card-panel-body compact" style="padding:0;">
+        <table class="table table-hover">
+            <thead><tr><th>Tên nhà cung cấp</th><th>SĐT</th><th>Email</th><th>Địa chỉ</th><th class="text-center" style="width:120px;">Thao tác</th></tr></thead>
+            <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td><span class="fw-semibold" style="color:var(--gray-900);">@s.SupplierName</span></td>
+                    <td>@s.Phone</td><td>@s.Email</td><td>@s.Address</td>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a href="/Supplier/Edit/@s.SupplierId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                            <form method="post" action="/Supplier/Delete/@s.SupplierId" class="d-inline" onsubmit="return confirm('Xóa NCC này?')"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash3"></i></button></form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="empty-state"><i class="bi bi-truck"></i><p>Chưa có nhà cung cấp nào</p></div>
+        }
+    </div>
+</div>

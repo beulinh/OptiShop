@@ -1,0 +1,67 @@
+@model OptiShop.Models.Customer
+@{ ViewData["Title"] = Model.FullName; }
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card-panel">
+            <div class="card-panel-header">
+                <h5><i class="bi bi-person-fill"></i> Thông tin</h5>
+                <a href="/Customer/Edit/@Model.CustomerId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+            </div>
+            <div class="card-panel-body">
+                <table class="table table-borderless info-table mb-0">
+                    <tr><td>Họ tên</td><td class="fw-bold" style="color:var(--gray-900);">@Model.FullName</td></tr>
+                    <tr><td>SĐT</td><td>@Model.Phone</td></tr>
+                    <tr><td>Email</td><td>@Model.Email</td></tr>
+                    <tr><td>Địa chỉ</td><td>@Model.Address</td></tr>
+                    <tr><td>Ngày tạo</td><td>@Model.CreatedDate.ToString("dd/MM/yyyy")</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card-panel mb-4">
+            <div class="card-panel-header"><h6><i class="bi bi-eye-fill"></i> Đơn kính <span class="badge bg-secondary ms-2">@Model.Prescriptions.Count</span></h6></div>
+            <div class="card-panel-body compact" style="padding:0;">
+                @if (Model.Prescriptions.Any())
+                {
+                    <table class="table">
+                        <thead><tr><th>Ngày tạo</th><th>Mắt phải (SPH/CYL/AXIS)</th><th>Mắt trái (SPH/CYL/AXIS)</th><th>PD</th></tr></thead>
+                        <tbody>
+                        @foreach (var p in Model.Prescriptions)
+                        {
+                            <tr><td>@p.CreatedDate.ToString("dd/MM/yyyy")</td><td>@p.RightSPH / @p.RightCYL / @p.RightAXIS</td><td>@p.LeftSPH / @p.LeftCYL / @p.LeftAXIS</td><td>@p.PD</td></tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                else { <div class="empty-state" style="padding:24px;"><p>Chưa có đơn kính</p></div> }
+            </div>
+        </div>
+        <div class="card-panel">
+            <div class="card-panel-header"><h6><i class="bi bi-receipt"></i> Lịch sử đơn hàng <span class="badge bg-secondary ms-2">@Model.Orders.Count</span></h6></div>
+            <div class="card-panel-body compact" style="padding:0;">
+                @if (Model.Orders.Any())
+                {
+                    <table class="table table-hover">
+                        <thead><tr><th>Mã đơn</th><th>Ngày</th><th>Loại</th><th class="text-end">Tổng tiền</th><th class="text-center">Trạng thái</th></tr></thead>
+                        <tbody>
+                        @foreach (var o in Model.Orders.OrderByDescending(o => o.OrderDate))
+                        {
+                            var badgeClass = o.Status switch { "HoanThanh" => "badge-completed", "DaHuy" => "badge-cancelled", _ => "badge-pending" };
+                            <tr>
+                                <td><a href="/Order/Details/@o.OrderId" class="fw-semibold">#@o.OrderId</a></td>
+                                <td style="color:var(--gray-500);">@o.OrderDate.ToString("dd/MM/yyyy")</td>
+                                <td><span class="badge bg-secondary">@o.OrderType</span></td>
+                                <td class="text-end price">@o.TotalAmount.ToString("N0") đ</td>
+                                <td class="text-center"><span class="badge badge-status @badgeClass">@o.Status</span></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                else { <div class="empty-state" style="padding:24px;"><p>Chưa có đơn hàng</p></div> }
+            </div>
+        </div>
+    </div>
+</div>

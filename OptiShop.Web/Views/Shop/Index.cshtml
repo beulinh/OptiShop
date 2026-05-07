@@ -1,0 +1,27 @@
+@model IEnumerable<OptiShop.Models.Product>
+@{ ViewData["Title"] = "Cửa hàng kính mắt"; }
+
+<div class="row g-4">
+@foreach (var p in Model)
+{
+    <div class="col-md-3">
+        <div class="shop-card">
+            <div style="overflow:hidden;">
+                <img src="@(p.ImageUrl ?? "/images/no-image.png")" class="shop-card-img" alt="@p.ProductName" />
+            </div>
+            <div class="shop-card-body">
+                <div class="shop-card-name">@p.ProductName</div>
+                <div class="shop-card-meta">@p.Brand?.BrandName · @p.Category?.CategoryName</div>
+                <div class="shop-card-price">@p.Price.ToString("N0") đ</div>
+            </div>
+        </div>
+    </div>
+}
+</div>
+@if (!Model.Any())
+{
+    <div class="empty-state" style="padding:80px 24px;">
+        <i class="bi bi-shop" style="font-size:4rem;"></i>
+        <p style="font-size:16px; margin-top:12px;">Không có sản phẩm nào</p>
+    </div>
+}

@@ -1,0 +1,107 @@
+@{ ViewData["Title"] = "Tạo phiếu nhập kho"; }
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="table-container">
+            <h5 class="fw-bold mb-3"><i class="bi bi-box-seam"></i> Chọn sản phẩm nhập</h5>
+            <input type="text" id="searchProduct" class="form-control mb-3" placeholder="Tìm tên sản phẩm..." />
+            <table class="table table-hover align-middle" id="productTable">
+                <thead class="table-light"><tr><th>Sản phẩm</th><th class="text-center">Tồn hiện tại</th><th class="text-center">Thêm</th></tr></thead>
+                <tbody>
+                @foreach (var p in (IEnumerable<OptiShop.Models.Product>)ViewBag.Products)
+                {
+                    <tr>
+                        <td class="fw-semibold">@p.ProductName</td>
+                        <td class="text-center"><span class="badge bg-secondary">@p.Stock</span></td>
+                        <td class="text-center"><button type="button" class="btn btn-sm btn-outline-success" onclick="addItem(@p.ProductId, '@p.ProductName.Replace("'","\\'")')"><i class="bi bi-plus"></i></button></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="table-container">
+            <h5 class="fw-bold mb-3"><i class="bi bi-archive"></i> Phiếu nhập</h5>
+            <form method="post" id="importForm">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nhà cung cấp *</label>
+                    <select name="SupplierId" class="form-select" required asp-items="@((SelectList)ViewBag.Suppliers)"><option value="">-- Chọn NCC --</option></select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Ghi chú</label>
+                    <textarea name="Note" class="form-control" rows="2"></textarea>
+                </div>
+                <hr />
+                <div id="importItems"></div>
+                <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+                    <strong>Tổng cộng:</strong>
+                    <span class="text-primary fw-bold fs-5" id="totalAmount">0 đ</span>
+                </div>
+                <button type="submit" class="btn btn-success w-100" id="btnSubmit" disabled>
+                    <i class="bi bi-check-circle"></i> Tạo phiếu nhập
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+let items = [];
+
+function addItem(productId, name) {
+    if (items.find(i => i.productId === productId)) { alert('SP đã có!'); return; }
+    items.push({ productId, name, qty: 1, unitPrice: 0 });
+    renderItems();
+}
+
+function removeItem(productId) {
+    items = items.filter(i => i.productId !== productId);
+    renderItems();
+}
+
+function updateItem(productId, field, value) {
+    const item = items.find(i => i.productId === productId);
+    if (item) { item[field] = Number(value); }
+    renderItems();
+}
+
+function renderItems() {
+    let html = '';
+    let total = 0;
+    items.forEach((item, i) => {
+        total += item.unitPrice * item.qty;
+        html += `<div class="mb-2 p-2 bg-light rounded">
+            <div class="fw-semibold mb-1" style="font-size:0.9rem;">${item.name}</div>
+            <div class="d-flex gap-2">
+                <div>
+                    <small class="text-muted">SL</small>
+                    <input type="number" min="1" value="${item.qty}" style="width:70px;" class="form-control form-control-sm" onchange="updateItem(${item.productId},'qty',this.value)" />
+                </div>
+                <div>
+                    <small class="text-muted">Đơn giá nhập</small>
+                    <input type="number" min="0" value="${item.unitPrice}" style="width:120px;" class="form-control form-control-sm" onchange="updateItem(${item.productId},'unitPrice',this.value)" />
+                </div>
+                <div class="ms-auto align-self-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(${item.productId})"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <input type="hidden" name="Items[${i}].ProductId" value="${item.productId}" />
+            <input type="hidden" name="Items[${i}].Quantity" value="${item.qty}" />
+            <input type="hidden" name="Items[${i}].UnitPrice" value="${item.unitPrice}" />
+        </div>`;
+    });
+    document.getElementById('importItems').innerHTML = html || '<p class="text-muted text-center">Chưa có sản phẩm</p>';
+    document.getElementById('totalAmount').textContent = total.toLocaleString() + ' đ';
+    document.getElementById('btnSubmit').disabled = items.length === 0;
+}
+
+document.getElementById('searchProduct').addEventListener('input', function() {
+    const keyword = this.value.toLowerCase();
+    document.querySelectorAll('#productTable tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(keyword) ? '' : 'none';
+    });
+});
+</script>
+}

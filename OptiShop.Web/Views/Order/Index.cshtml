@@ -1,0 +1,53 @@
+@model IEnumerable<OptiShop.Models.Order>
+@{ ViewData["Title"] = "Quản lý đơn hàng"; }
+
+<div class="card-panel">
+    <div class="card-panel-header">
+        <div class="filter-tabs">
+            <a href="/Order" class="filter-tab @(ViewBag.CurrentStatus == null ? "active" : "")">Tất cả</a>
+            <a href="/Order?status=ChoXacNhan" class="filter-tab @(ViewBag.CurrentStatus == "ChoXacNhan" ? "active" : "")">Chờ xác nhận</a>
+            <a href="/Order?status=DangXuLy" class="filter-tab @(ViewBag.CurrentStatus == "DangXuLy" ? "active" : "")">Đang xử lý</a>
+            <a href="/Order?status=DaXacNhan" class="filter-tab @(ViewBag.CurrentStatus == "DaXacNhan" ? "active" : "")">Đã xác nhận</a>
+            <a href="/Order?status=DangGiao" class="filter-tab @(ViewBag.CurrentStatus == "DangGiao" ? "active" : "")">Đang giao</a>
+            <a href="/Order?status=HoanThanh" class="filter-tab @(ViewBag.CurrentStatus == "HoanThanh" ? "active" : "")">Hoàn thành</a>
+            <a href="/Order?status=DaHuy" class="filter-tab @(ViewBag.CurrentStatus == "DaHuy" ? "active" : "")">Đã hủy</a>
+        </div>
+        <a href="/Order/Create" class="btn btn-primary"><i class="bi bi-plus"></i> Tạo đơn hàng</a>
+    </div>
+    <div class="card-panel-body compact" style="padding:0;">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th><th>Khách hàng</th><th>Ngày đặt</th><th>Loại</th>
+                    <th class="text-end">Tổng tiền</th><th class="text-center">Trạng thái</th><th class="text-center" style="width:80px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var o in Model)
+            {
+                var badgeClass = o.Status switch {
+                    "ChoXacNhan" => "badge-pending", "DangXuLy" => "badge-pending", "DaXacNhan" => "badge-confirmed",
+                    "DangGiao" => "badge-shipping", "HoanThanh" => "badge-completed", "DaHuy" => "badge-cancelled", _ => "bg-secondary"
+                };
+                var statusText = o.Status switch {
+                    "ChoXacNhan" => "Chờ xác nhận", "DangXuLy" => "Đang xử lý", "DaXacNhan" => "Đã xác nhận",
+                    "DangGiao" => "Đang giao", "HoanThanh" => "Hoàn thành", "DaHuy" => "Đã hủy", _ => o.Status
+                };
+                <tr>
+                    <td><span class="fw-semibold" style="color:var(--gray-900);">#@o.OrderId</span></td>
+                    <td>@o.Customer?.FullName</td>
+                    <td style="color:var(--gray-500);">@o.OrderDate.ToString("dd/MM/yyyy")</td>
+                    <td><span class="badge bg-secondary">@o.OrderType</span></td>
+                    <td class="text-end price">@o.TotalAmount.ToString("N0") đ</td>
+                    <td class="text-center"><span class="badge badge-status @badgeClass">@statusText</span></td>
+                    <td class="text-center"><a href="/Order/Details/@o.OrderId" class="btn btn-sm btn-ghost"><i class="bi bi-eye"></i></a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        @if (!Model.Any())
+        {
+            <div class="empty-state"><i class="bi bi-receipt"></i><p>Không có đơn hàng nào</p></div>
+        }
+    </div>
+</div>
