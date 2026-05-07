@@ -1,27 +1,77 @@
+@*
+    ============================================================
+    File        : Index.cshtml
+    Người viết  : Hoàng Quang Nam
+    Ngày tạo    : 07/05/2026
+    ------------------------------------------------------------
+    Mô tả:
+      Giao diện hiển thị danh sách sản phẩm kính mắt
+      trong hệ thống OptiShop.
+
+    Chức năng:
+      - Hiển thị danh sách sản phẩm dạng card
+      - Hiển thị:
+          + Hình ảnh sản phẩm
+          + Tên sản phẩm
+          + Thương hiệu
+          + Danh mục
+          + Giá bán
+      - Hiển thị ảnh mặc định nếu sản phẩm chưa có ảnh
+      - Thông báo khi danh sách sản phẩm trống
+
+    Công nghệ sử dụng:
+      - ASP.NET Core MVC
+      - Razor View Engine
+      - Bootstrap 5
+      - Bootstrap Icons
+    ============================================================
+*@
+
 @model IEnumerable<OptiShop.Models.Product>
-@{ ViewData["Title"] = "Cửa hàng kính mắt"; }
+
+@{
+    ViewData["Title"] = "Cửa hàng kính mắt";
+}
 
 <div class="row g-4">
-@foreach (var p in Model)
-{
-    <div class="col-md-3">
-        <div class="shop-card">
-            <div style="overflow:hidden;">
-                <img src="@(p.ImageUrl ?? "/images/no-image.png")" class="shop-card-img" alt="@p.ProductName" />
-            </div>
-            <div class="shop-card-body">
-                <div class="shop-card-name">@p.ProductName</div>
-                <div class="shop-card-meta">@p.Brand?.BrandName · @p.Category?.CategoryName</div>
-                <div class="shop-card-price">@p.Price.ToString("N0") đ</div>
+
+    @* Duyệt toàn bộ danh sách sản phẩm *@
+    @foreach (var p in Model)
+    {
+        <div class="col-md-3">
+            <div class="shop-card">
+
+                <div style="overflow:hidden;">
+
+                    <img src="@(p.ImageUrl ?? "/images/no-image.png")"
+                         class="shop-card-img"
+                         alt="@p.ProductName" />
+                </div>
+
+                <div class="shop-card-body">
+                    <div class="shop-card-name">@p.ProductName</div>
+
+                    <div class="shop-card-meta">
+                        @p.Brand?.BrandName · @p.Category?.CategoryName
+                    </div>
+
+                    <div class="shop-card-price">
+                        @p.Price.ToString("N0") đ
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
-}
+    }
+
 </div>
 @if (!Model.Any())
 {
     <div class="empty-state" style="padding:80px 24px;">
         <i class="bi bi-shop" style="font-size:4rem;"></i>
-        <p style="font-size:16px; margin-top:12px;">Không có sản phẩm nào</p>
+
+        <p style="font-size:16px; margin-top:12px;">
+            Không có sản phẩm nào
+        </p>
     </div>
 }

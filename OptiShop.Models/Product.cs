@@ -32,7 +32,6 @@ public class Product
 
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-    // Navigation
     [ForeignKey("CategoryId")]
     public Category? Category { get; set; }
 

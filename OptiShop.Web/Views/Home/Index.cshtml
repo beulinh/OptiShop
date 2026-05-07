@@ -1,7 +1,45 @@
-﻿@model OptiShop.Business.DTOs.DashboardDto
-@{ ViewData["Title"] = "Dashboard"; }
+﻿@*
+    ============================================================
+    File        : Index.cshtml
+    Người viết  : Hoàng Quang Nam
+    Ngày tạo    : 07/05/2026
+    ------------------------------------------------------------
+    Mô tả:
+      Đây là giao diện Dashboard chính của hệ thống OptiShop.
 
-<!-- Stat Cards -->
+    Chức năng:
+      - Hiển thị thống kê tổng quan:
+          + Tổng doanh thu
+          + Tổng đơn hàng
+          + Tổng sản phẩm
+          + Tổng khách hàng
+
+      - Cung cấp các chức năng truy cập nhanh:
+          + Tạo đơn hàng
+          + Thêm sản phẩm
+          + Nhập kho
+          + Thêm khách hàng
+
+      - Hiển thị thông tin hệ thống:
+          + Phiên bản phần mềm
+          + Framework sử dụng
+          + Database
+          + Thời gian hiện tại
+
+    Công nghệ sử dụng:
+      - ASP.NET Core MVC
+      - Razor View Engine
+      - Bootstrap 5
+      - Bootstrap Icons
+    ============================================================
+*@
+
+@model OptiShop.Business.DTOs.DashboardDto
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="stat-card stat-card-blue">
@@ -33,7 +71,6 @@
     </div>
 </div>
 
-<!-- Quick Access & Info -->
 <div class="row g-4">
     <div class="col-md-7">
         <div class="card-panel">
